@@ -1,95 +1,115 @@
 <!doctype html>
 <html lang="es">
+
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Agente Domótico — Demo (Español)</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Agente Domótico</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css" />
 </head>
+
 <body>
-  <main class="wrap">
-    <header class="topbar">
-      <div class="brand">
-        <div class="logo">🏠</div>
-        <div>
-          <h1>Agente Domótico</h1>
-          <p class="muted">Demo interactiva — lógica local (Frontend-only)</p>
-        </div>
-      </div>
-      <div class="top-actions">
-        <button id="btnAleatorio" title="Generar percepción aleatoria">Generar aleatoria</button>
-        <button id="btnExportar" title="Descargar log (.csv)">Exportar log</button>
-        <button id="btnBorrarLog" title="Limpiar log">Borrar log</button>
-      </div>
-    </header>
+    <main class="wrap">
+        <header class="topbar">
+            <div class="brand">
+                <div class="logo">🏠</div>
+                <div>
+                    <h1>Agente Inteligente de Casa Domótica</h1>
+                </div>
+            </div>
+            <div class="top-actions">
+                <button id="btnAleatorio" title="Generar percepción aleatoria">Generar aleatoria</button>
+                <button id="btnBorrarLog" title="Limpiar log">Borrar log</button>
+            </div>
+        </header>
 
-    <section class="grid">
-      <!-- CONTROLES -->
-      <aside class="card controls">
-        <h2>Percepciones</h2>
-        <p class="muted">Selecciona percepciones o escribe una personalizada.</p>
+        <section class="grid">
+            <aside class="card controls">
+                <h2>Percepciones</h2>
+                <p class="muted">Selecciona percepciones desde el desplegable o escribe una personalizada.</p>
+                <div class="multi-select" id="contenedorMultiSelect">
+                    <button id="btnToggleDesplegable" class="select-btn" aria-haspopup="true" aria-expanded="false">
+                        <span id="textoSeleccion">Seleccionar percepciones...</span>
+                        <span class="chev">▾</span>
+                    </button>
+                    <div class="dropdown" id="desplegable">
+                        <div class="dropdown-search">
+                            <input id="buscarPercepcion" placeholder="Buscar..." />
+                        </div>
+                        <div id="listaCheckboxes" class="dropdown-list">
+                            <!-- checkboxes creados por JS -->
+                        </div>
+                        <div class="dropdown-actions">
+                            <button id="btnSeleccionarTodo">Seleccionar todo</button>
+                            <button id="btnLimpiarSeleccion">Limpiar</button>
+                            <button id="btnCerrarDesplegable">Cerrar</button>
+                        </div>
+                    </div>
+                </div>
 
-        <div id="rejillaPercepciones" class="grid-checks" aria-label="Opciones de percepciones">
-          <!-- checkboxes creados por JS -->
-        </div>
+                <div class="row">
+                    <input id="personalizado" type="text"
+                        placeholder="ej: presencia_humana,es_de_noche,temperatura_baja"
+                        aria-label="Percepción personalizada">
+                    <button id="agregarPersonalizado">Agregar</button>
+                </div>
 
-        <div class="row">
-          <input id="personalizado" type="text" placeholder="ej: presencia_humana,es_de_noche,temperatura_baja" aria-label="Percepción personalizada">
-          <button id="agregarPersonalizado">Agregar</button>
-        </div>
+                <div class="row space-between" style="margin-top:12px">
+                    <button id="btnActuar" class="primary">Actuar</button>
+                    <button id="btnLimpiar">Limpiar selección</button>
+                </div>
+            </aside>
 
-        <div class="row space-between">
-          <button id="btnActuar" class="primary">Actuar</button>
-          <button id="btnLimpiar">Limpiar selección</button>
-        </div>
+            <div class="col-derecha">
+                <section class="card result">
+                    <h2>Resultado</h2>
+                    <div class="result-grid">
+                        <div>
+                            <label>Percepción actual</label>
+                            <div id="percepcionActual" class="value">—</div>
+                        </div>
+                        <div>
+                            <label>Acción devuelta</label>
+                            <div id="accionResultado" class="value accent">—</div>
+                        </div>
+                        <div>
+                            <label>Clave encontrada</label>
+                            <div id="claveCoincidente" class="value">—</div>
+                        </div>
+                        <div>
+                            <label>Notas</label>
+                            <div id="notas" class="value muted">—</div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </section>
+        <section class="card registro-fullwidth">
+            <h3>Registro (interacciones recientes)</h3>
+            <div id="contenedorLog">
+                <pre id="areaLog" class="log" aria-live="polite">—</pre>
+            </div>
+        </section>
+        <section class="card reglas-fullwidth">
+            <h3>Reglas (mapeo percepción → acción)</h3>
+            <p class="muted small">Añade reglas nuevas; aparecerán aquí y el agente las usará de inmediato.</p>
 
-        <hr>
+            <div class="rule-editor">
+                <input id="claveRegla" placeholder="clave (coma-separada) — e.g. humo_detectado" />
+                <input id="accionRegla" placeholder="acción (+' concatenadas) — e.g. activar_alarma+notificar" />
+                <button id="btnAgregarRegla">Añadir regla</button>
+            </div>
 
-        <h3>Reglas (mapeo percepción → acción)</h3>
-        <p class="muted small">Puedes agregar reglas nuevas que el agente usará inmediatamente.</p>
+            <div id="listaReglas" class="rules-list"></div>
+        </section>
+        <footer class="footer">
+            <small>Frontend-only — la lógica de coincidencia se ejecuta en tu navegador. Abre <code>index.html</code>
+                localmente.</small>
+        </footer>
+    </main>
 
-        <div class="rule-editor">
-          <input id="claveRegla" placeholder="clave (coma-separada) — e.g. humo_detectado" />
-          <input id="accionRegla" placeholder="acción (+' concatenadas) — e.g. activar_alarma+notificar" />
-          <button id="btnAgregarRegla">Añadir regla</button>
-        </div>
-
-        <div id="listaReglas" class="rules-list"></div>
-      </aside>
-
-      <!-- RESULTADO -->
-      <section class="card result">
-        <h2>Resultado</h2>
-        <div class="result-grid">
-          <div>
-            <label>Percepción actual</label>
-            <div id="percepcionActual" class="value">—</div>
-          </div>
-          <div>
-            <label>Acción devuelta</label>
-            <div id="accionResultado" class="value accent">—</div>
-          </div>
-          <div>
-            <label>Clave encontrada</label>
-            <div id="claveCoincidente" class="value">—</div>
-          </div>
-          <div>
-            <label>Notas</label>
-            <div id="notas" class="value muted">—</div>
-          </div>
-        </div>
-
-        <h3 style="margin-top:14px">Registro (interacciones recientes)</h3>
-        <pre id="areaLog" class="log" aria-live="polite">—</pre>
-      </section>
-    </section>
-
-    <footer class="footer">
-      <small>Frontend-only — la lógica de coincidencia se ejecuta en tu navegador. Abre <code>index.html</code> localmente.</small>
-    </footer>
-  </main>
-
-  <script src="app.js"></script>
+    <script src="app.js"></script>
 </body>
+
 </html>
