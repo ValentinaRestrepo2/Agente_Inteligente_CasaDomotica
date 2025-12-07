@@ -209,6 +209,7 @@ input[type="text"],
 #claveRegla,
 #accionRegla {
     padding: 10px;
+    width: 30%;
     border-radius: 10px;
     border: 1px solid rgba(11, 18, 32, 0.06);
     flex: 1;
@@ -262,9 +263,11 @@ button#btnAgregarRegla {
     background: var(--glass);
     border: 1px solid rgba(11, 18, 32, 0.02);
     min-height: 44px;
-    display: flex;
-    align-items: center
+    display: block;
+    white-space: normal;
+    word-break: break-word;
 }
+
 
 .value.accent {
     color: var(--accent);

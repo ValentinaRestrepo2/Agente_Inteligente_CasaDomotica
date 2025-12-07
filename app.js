@@ -20,6 +20,7 @@ const reglas = {
   'modo_noche,sin_presencia': 'apagar_luces+activar_alarma_noche',
   'mascota_en_casa,temperatura_baja': 'encender_calefaccion_mascota',
   'mascota_en_casa,sin_presencia': 'activar_camara_mascota+modo_ahorro_energia',
+  'puerta_abierta,sin_presencia': 'apagar_luces+cerrar_puerta',
 
   // combinaciones extendidas
   'presencia_humana,es_de_noche,temperatura_baja,humedad_alta': 'encender_luces+bajar_persianas+termostato_24+activar_deshumidificador',
@@ -30,29 +31,29 @@ const reglas = {
 };
 
 const opcionesPercepcion = [
-  'presencia_humana','sin_presencia','es_de_noche','es_de_dia',
-  'temperatura_baja','temperatura_media','temperatura_alta',
-  'humedad_alta','puerta_abierta','humo_detectado','fuga_agua_detectada',
-  'co2_alto','mascota_en_casa','modo_ausente','modo_noche'
+  'presencia_humana', 'sin_presencia', 'es_de_noche', 'es_de_dia',
+  'temperatura_baja', 'temperatura_media', 'temperatura_alta',
+  'humedad_alta', 'puerta_abierta', 'humo_detectado', 'fuga_agua_detectada',
+  'co2_alto', 'mascota_en_casa', 'modo_ausente', 'modo_noche'
 ];
 
 let registros = [];
 
-function normalizarClave(s){
+function normalizarClave(s) {
   return s.split(',').map(x => x.trim()).filter(Boolean).join(',');
 }
 // Agente inteligente
-function actuarAgente(percepcionStr){
+function actuarAgente(percepcionStr) {
   if (!percepcionStr || percepcionStr.trim() === '') {
     return { accion: 'acción no parametrizada', claveCoincidente: null, notas: 'Percepción vacía' };
   }
   const claveNorm = normalizarClave(percepcionStr);
-  if (reglas.hasOwnProperty(claveNorm)){
+  if (reglas.hasOwnProperty(claveNorm)) {
     return { accion: reglas[claveNorm], claveCoincidente: claveNorm, notas: 'Coincidencia exacta' };
   }
-  const clavesOrdenadas = Object.keys(reglas).sort((a,b) => b.split(',').length - a.split(',').length);
+  const clavesOrdenadas = Object.keys(reglas).sort((a, b) => b.split(',').length - a.split(',').length);
   const partesPercepcion = claveNorm.split(',');
-  for (const k of clavesOrdenadas){
+  for (const k of clavesOrdenadas) {
     const tokens = k.split(',').map(x => x.trim());
     const todosPresentes = tokens.every(t => partesPercepcion.includes(t));
     if (todosPresentes) {
@@ -76,7 +77,7 @@ const notas = document.getElementById('notas');
 const areaLog = document.getElementById('areaLog');
 const listaReglas = document.getElementById('listaReglas');
 
-function crearCheckbox(label){
+function crearCheckbox(label) {
   const wrapper = document.createElement('label');
   wrapper.className = 'perc-checkbox';
   const input = document.createElement('input');
@@ -89,8 +90,8 @@ function crearCheckbox(label){
   wrapper.appendChild(span);
   return wrapper;
 }
-function poblarListaCheckboxes(filtro = ''){
-  const seleccionPrev = new Set([...listaCheckboxes.querySelectorAll('input[type="checkbox"]:checked')].map(i=>i.value));
+function poblarListaCheckboxes(filtro = '') {
+  const seleccionPrev = new Set([...listaCheckboxes.querySelectorAll('input[type="checkbox"]:checked')].map(i => i.value));
   listaCheckboxes.innerHTML = '';
   const items = opcionesPercepcion.filter(o => o.includes(filtro));
   items.forEach(opt => {
@@ -102,12 +103,12 @@ function poblarListaCheckboxes(filtro = ''){
 }
 poblarListaCheckboxes('');
 
-function leerSeleccionDesplegable(){
+function leerSeleccionDesplegable() {
   const checks = [...listaCheckboxes.querySelectorAll('input[type="checkbox"]:checked')].map(i => i.value);
   return checks;
 }
 
-function refrescarTextoSeleccion(){
+function refrescarTextoSeleccion() {
   const sel = leerSeleccionDesplegable();
   if (sel.length === 0) textoSeleccion.textContent = 'Seleccionar percepciones...';
   else if (sel.length === 1) textoSeleccion.textContent = sel[0];
@@ -173,9 +174,9 @@ document.getElementById('btnAleatorio').addEventListener('click', () => {
   const n = Math.floor(Math.random() * 4) + 1; // 1..4 percepciones
   const pool = [...opcionesPercepcion];
   const picked = [];
-  for (let i=0;i<n;i++){
-    const idx = Math.floor(Math.random()*pool.length);
-    picked.push(pool.splice(idx,1)[0]);
+  for (let i = 0; i < n; i++) {
+    const idx = Math.floor(Math.random() * pool.length);
+    picked.push(pool.splice(idx, 1)[0]);
   }
   poblarListaCheckboxes('');
   listaCheckboxes.querySelectorAll('input[type="checkbox"]').forEach(i => i.checked = picked.includes(i.value));
@@ -191,7 +192,7 @@ document.getElementById('btnLimpiar').addEventListener('click', () => {
   percepcionActual.textContent = '—'; accionResultado.textContent = '—'; claveCoincidente.textContent = '—'; notas.textContent = '—';
 });
 
-function actualizarResultado(percepStr, res){
+function actualizarResultado(percepStr, res) {
   percepcionActual.textContent = percepStr || '—';
   accionResultado.textContent = res.accion;
   claveCoincidente.textContent = res.claveCoincidente || '—';
@@ -203,7 +204,7 @@ function actualizarResultado(percepStr, res){
   renderizarReglas();
 }
 
-function refrescarAreaLog(){
+function refrescarAreaLog() {
   if (registros.length === 0) {
     areaLog.innerHTML = '<div class="log-line">—</div>';
     return;
@@ -216,9 +217,9 @@ function refrescarAreaLog(){
   areaLog.innerHTML = lineas.join('');
 }
 
-function escapeHtml(s){
+function escapeHtml(s) {
   if (!s) return '';
-  return s.toString().replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  return s.toString().replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
 document.getElementById('btnBorrarLog').addEventListener('click', () => {
@@ -227,9 +228,9 @@ document.getElementById('btnBorrarLog').addEventListener('click', () => {
   refrescarAreaLog();
 });
 
-function renderizarReglas(){
+function renderizarReglas() {
   listaReglas.innerHTML = '';
-  const claves = Object.keys(reglas).sort((a,b) => a.localeCompare(b));
+  const claves = Object.keys(reglas).sort((a, b) => a.localeCompare(b));
   claves.forEach(k => {
     const div = document.createElement('div');
     div.className = 'rule-item';

@@ -50,7 +50,7 @@
 
                 <div class="row">
                     <input id="personalizado" type="text"
-                        placeholder="ej: presencia_humana,es_de_noche,temperatura_baja"
+                        placeholder="Ej: presencia_humana,es_de_noche,temperatura_baja"
                         aria-label="Percepción personalizada">
                     <button id="agregarPersonalizado">Agregar</button>
                 </div>
@@ -96,16 +96,15 @@
             <p class="muted small">Añade reglas nuevas; aparecerán aquí y el agente las usará de inmediato.</p>
 
             <div class="rule-editor">
-                <input id="claveRegla" placeholder="clave (coma-separada) — e.g. humo_detectado" />
-                <input id="accionRegla" placeholder="acción (+' concatenadas) — e.g. activar_alarma+notificar" />
+                <input id="claveRegla" placeholder="Ej: presencia_humana,es_de_dia,temperatura_baja" />
+                <input id="accionRegla" placeholder="Ej: subir_persianas+termostato_24" />
                 <button id="btnAgregarRegla">Añadir regla</button>
             </div>
 
             <div id="listaReglas" class="rules-list"></div>
         </section>
         <footer class="footer">
-            <small>Frontend-only — la lógica de coincidencia se ejecuta en tu navegador. Abre <code>index.html</code>
-                localmente.</small>
+            <small>Valentina Restrepo Arboleda - Elizabeth Muñoz Martinez</small>
         </footer>
     </main>
 
